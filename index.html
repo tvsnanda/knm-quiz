@@ -2,346 +2,281 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>KNM Quiz – Lessons + Daily Practice (SRS)</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover" />
+<title>KNM – Lessons 9 & 10 • Fill‑in Quiz (Mobile)</title>
 <style>
+  :root{color-scheme:dark light}
   body{margin:0;font:16px/1.5 system-ui,Segoe UI,Roboto,Arial;background:#0b0f1c;color:#e5e7eb}
-  .wrap{max-width:1024px;margin:16px auto;padding:12px}
-  .card{background:#0f1628;border:1px solid #1f2b44;border-radius:12px;padding:14px;margin-top:12px}
+  .wrap{max-width:920px;margin:24px auto;padding:16px}
+  .card{background:#0f1628;border:1px solid #1f2b44;border-radius:12px;padding:16px}
   .row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
   label{font-weight:600;color:#9ca3af}
-  select,input[type=number],input[type=text]{background:#0b1220;border:1px solid #243041;color:#e5e7eb;padding:8px;border-radius:8px}
-  input[type=radio]{margin-right:6px}
-  button{background:#22d3ee;color:#00242a;border:0;padding:10px 14px;border-radius:10px;font-weight:700;cursor:pointer}
+  select,input[type=text]{background:#0b1220;border:1px solid #243041;color:#e5e7eb;padding:12px;border-radius:10px}
+  button{background:#22d3ee;color:#00242a;border:0;padding:12px 16px;border-radius:10px;font-weight:700;cursor:pointer}
   button[disabled]{opacity:.6;cursor:not-allowed}
-  .prompt{font-size:24px;font-weight:800;margin:8px 0}
-  .feedback{min-height:22px;margin-top:8px}
+  .pill{display:inline-block;padding:4px 10px;border-radius:999px;background:#0b1220;border:1px solid #22314a;color:#9ca3af;font-size:12px;margin-right:6px}
+  .prompt{font-size:26px;font-weight:800;margin:12px 0}
+  .feedback{min-height:24px;margin-top:8px}
   .ok{color:#22c55e;font-weight:700}
   .bad{color:#ef4444;font-weight:700}
-  .small{font-size:12px;color:#9ca3af}
-  .pill{display:inline-block;padding:4px 10px;border-radius:999px;background:#0b1220;border:1px solid #22314a;color:#9ca3af;font-size:12px;margin-right:6px}
-  .bar{height:8px;border-radius:999px;background:#1f2937;overflow:hidden;margin:8px 0 10px}
+  .bar{height:8px;border-radius:999px;background:#1f2937;overflow:hidden;margin:14px 0}
   .bar>span{display:block;height:100%;background:linear-gradient(90deg,#06b6d4,#22c55e);width:0%}
-  .pair{display:flex;align-items:center;gap:8px;margin:6px 0}
-  .pair label{min-width:10ch}
-  .pair select{flex:1}
-  .correct{border-color:#14532d;background:#0b1f16}
-  .wrong{border-color:#7f1d1d;background:#1b0f10}
-  @media (max-width:560px){ .row{gap:8px} .prompt{font-size:22px} }
+  .small{font-size:12px;color:#9ca3af}
+  @media (max-width:560px){ .row{gap:10px} .prompt{font-size:22px} button{padding:12px 14px} }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h2>KNM Quiz – Lessons + Daily Practice (SRS)</h2>
+  <h1>🇳🇱 KNM – Lessons 9 & 10 • Fill‑in Quiz (Mobile)</h1>
 
   <div class="card">
-    <div class="row" style="gap:16px">
-      <div>
-        <label>Mode:</label>
-        <label><input type="radio" name="mode" value="fill" checked> Fill‑in</label>
-        <label><input type="radio" name="mode" value="match"> Match</label>
-      </div>
-      <div>
-        <label>Direction:</label>
+    <div class="row" style="gap:18px">
+      <div><label>Direction:</label>
         <label><input type="radio" name="dir" value="nl-en" checked> NL → EN</label>
         <label><input type="radio" name="dir" value="en-nl"> EN → NL</label>
       </div>
       <div>
         <label for="lesson">Lesson:</label>
-        <select id="lesson"><option value="__ALL__">All lessons</option></select>
+        <select id="lesson">
+          <option value="__ALL__">All (9 & 10)</option>
+          <option>Lesson 9</option>
+          <option>Lesson 10</option>
+        </select>
       </div>
-      <div>
-        <label><input type="checkbox" id="lenient" checked> Lenient check</label>
-      </div>
+      <div><label><input type="checkbox" id="lenient" checked> Lenient check</label></div>
+      <div style="margin-left:auto"><button id="startBtn">Start</button></div>
     </div>
-    <div class="row" style="margin-top:6px;gap:16px">
-      <div>
-        <label><input type="checkbox" id="daily" checked> Daily practice (SRS)</label>
-      </div>
-      <div id="dailyOpts">
-        <label for="session">Session size:</label>
-        <input id="session" type="number" min="5" max="100" value="25" />
-        <label for="newPerDay">New/day:</label>
-        <input id="newPerDay" type="number" min="0" max="200" value="25" />
-      </div>
-      <div class="small" id="stats">Due today: 0 • Seen: 0 • New left: 0</div>
-      <div style="margin-left:auto;display:flex;gap:8px">
-        <button id="resetBtn" type="button">Reset progress</button>
-        <button id="startBtn" type="button">Start</button>
-      </div>
-    </div>
+    <div class="small" id="status"></div>
   </div>
 
-  <div class="card" id="quiz" style="display:none">
+  <div class="card" id="quiz" style="display:none;margin-top:12px">
     <div class="row" style="justify-content:space-between">
       <div>
-        <span class="pill" id="modePill"></span>
-        <span class="pill" id="dirPill"></span>
         <span class="pill" id="lessonPill"></span>
+        <span class="pill" id="dirPill"></span>
       </div>
       <div class="small"><span id="score">0</span> correct • <span id="progress">0/0</span></div>
     </div>
     <div class="bar"><span id="barFill"></span></div>
 
-    <div id="fillin" style="display:none">
+    <div>
       <div class="prompt" id="prompt"></div>
       <div class="row">
-        <input id="answer" type="text" placeholder="Type answer…" autocomplete="off" />
-        <button id="checkBtn" type="button">Check</button>
+        <input id="answer" type="text" placeholder="Type answer…" autocomplete="off"
+               autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="text" />
+        <button id="checkBtn">Check</button>
       </div>
       <div class="feedback" id="feedback"></div>
       <div class="small" id="meta"></div>
-    </div>
-
-    <div id="matching" style="display:none">
-      <div class="small" style="margin-bottom:8px">Match the pairs, then click <b>Check</b>. (SRS updates apply only in Fill‑in mode.)</div>
-      <div id="matchPairs"></div>
-      <div class="row" style="margin-top:8px">
-        <button id="checkMatchBtn">Check</button>
-        <div class="feedback" id="matchFeedback"></div>
-      </div>
     </div>
   </div>
 </div>
 
 <script>
 (function(){
-  const RAW = {"lessons": ["Lesson 1", "Lesson 2", "Lesson 3", "Lesson 4", "Lesson 5", "Lesson 6", "Lesson 7", "Lesson 8", "Lesson 9", "Lesson 10", "100 Word"], "data": {"Lesson 1": [{"nl": "verschillende", "en": "different"}, {"nl": "getrouwd", "en": "married"}, {"nl": "de bruiloft", "en": "wedding"}, {"nl": "het huwelijk", "en": "marriage"}, {"nl": "bespreek", "en": "discuss"}, {"nl": "beslissen", "en": "decide"}, {"nl": "betekent", "en": "means"}, {"nl": "weleens", "en": "sometimes"}, {"nl": "soms", "en": "sometimes"}, {"nl": "naartoe", "en": "to go"}, {"nl": "buurlanden", "en": "neighbor land"}, {"nl": "de buren", "en": "neighbours"}, {"nl": "buurvrow", "en": "neighbour lady"}, {"nl": "buurman", "en": "neaighbour man"}, {"nl": "ligt", "en": "lies"}, {"nl": "de richting", "en": "the direction"}, {"nl": "de oosten", "en": "the east"}, {"nl": "de zuiden", "en": "the south"}, {"nl": "de noorden", "en": "the north"}, {"nl": "de westem", "en": "the west"}, {"nl": "vierkant", "en": "square"}, {"nl": "de cirkel", "en": "circle"}, {"nl": "de rechthoek", "en": "rectangle"}, {"nl": "de driehoek", "en": "traingle"}, {"nl": "de ovaal", "en": "oval"}, {"nl": "lang", "en": "long/ length"}, {"nl": "breed", "en": "breadth"}, {"nl": "hoogte", "en": "height"}, {"nl": "korte", "en": "short"}, {"nl": "groot", "en": "big"}, {"nl": "de rivier", "en": "the river"}, {"nl": "de meer", "en": "the lake"}, {"nl": "de dijk", "en": "dam/dike"}, {"nl": "de duinen", "en": "the duin"}, {"nl": "de polder", "en": "the polder"}, {"nl": "de zee", "en": "the sea"}, {"nl": "klein", "en": "small"}, {"nl": "hoofd", "en": "head"}, {"nl": "hoofdstad", "en": "capital"}, {"nl": "steden", "en": "states"}, {"nl": "het dorp", "en": "village"}, {"nl": "minder", "en": "less"}, {"nl": "meer", "en": "more"}, {"nl": "het vliegveld", "en": "airport"}, {"nl": "de haven", "en": "the port"}, {"nl": "heet", "en": "named"}, {"nl": "hoordt", "en": "belongs"}, {"nl": "de regering", "en": "government"}, {"nl": "de overheid", "en": "government"}, {"nl": "toren", "en": "tower"}, {"nl": "de rivieren", "en": "river"}, {"nl": "dicht gemaakt", "en": "closed"}, {"nl": "dijk", "en": "dam"}, {"nl": "polders", "en": "polders"}, {"nl": "laagland", "en": "low land"}, {"nl": "bergen", "en": "mountains"}, {"nl": "punt", "en": "point"}, {"nl": "duinen", "en": "dunen"}, {"nl": "beschermen", "en": "protect"}, {"nl": "tegen", "en": "against"}, {"nl": "zulke", "en": "such"}, {"nl": "zich", "en": "myselt/itself/himself"}, {"nl": "wisselvallig", "en": "uncertain"}, {"nl": "het seizoen", "en": "the season"}, {"nl": "de lente", "en": "the spring"}, {"nl": "de herfst", "en": "the autumn"}, {"nl": "de winter", "en": "the winter"}, {"nl": "de zomer", "en": "the summer"}, {"nl": "vriest", "en": "freezes"}, {"nl": "ongeveer", "en": "approximately"}, {"nl": "helder", "en": "bright"}, {"nl": "donker", "en": "dark"}, {"nl": "de bladeren", "en": "the leaves"}, {"nl": "de bloemen", "en": "the flowers"}, {"nl": "de bomen", "en": "the trees"}, {"nl": "de planten", "en": "the plants"}, {"nl": "schijnt", "en": "shines"}, {"nl": "de wolk", "en": "the cloud"}, {"nl": "bewolkt", "en": "cloudy"}, {"nl": "waait", "en": "wind blow"}, {"nl": "de bevolking", "en": "the population"}, {"nl": "dichtbevolkt", "en": "dense population"}, {"nl": "nergens", "en": "nowhere"}, {"nl": "ergens", "en": "somewhere"}, {"nl": "moeilijker", "en": "difficultier"}, {"nl": "makkelijker", "en": "easier"}, {"nl": "mogelijk", "en": "possible"}, {"nl": "snelwegen", "en": "highway"}, {"nl": "de file", "en": "traffic"}, {"nl": "gastarbeiders", "en": "guestlabourers"}, {"nl": "de gasten", "en": "the guests"}, {"nl": "vooral", "en": "especially"}, {"nl": "vluchtelingen", "en": "refugees"}, {"nl": "vergunning", "en": "permit"}, {"nl": "belangrijkste", "en": "important"}, {"nl": "het heelal", "en": "the universe"}, {"nl": "de zon", "en": "sun"}, {"nl": "de maan", "en": "moon"}, {"nl": "de lucht", "en": "the sky"}, {"nl": "de hemel", "en": "sky/heaven"}, {"nl": "de regenboog", "en": "the rainbow"}, {"nl": "de regen", "en": "the rain"}, {"nl": "de ster", "en": "the star"}, {"nl": "de planeet", "en": "the planet"}, {"nl": "de aarde", "en": "the earth"}, {"nl": "stemmen", "en": "to vote"}, {"nl": "het geloof", "en": "the belief"}, {"nl": "het parlement", "en": "the parliament"}, {"nl": "gewoontjes", "en": "habits"}, {"nl": "vieren", "en": "celeberate"}, {"nl": "het feest", "en": "the party"}, {"nl": "dood", "en": "death"}, {"nl": "stierf", "en": "died"}, {"nl": "het verlies", "en": "the loss"}, {"nl": "vasten", "en": "fasting"}, {"nl": "liefde", "en": "love"}, {"nl": "lief zon", "en": "dear/sweet son"}, {"nl": "wereldoorlog", "en": "world war"}, {"nl": "het vuurwerk", "en": "the firework"}, {"nl": "de brand", "en": "fire"}, {"nl": "brand blusser", "en": "fire extinguisher"}, {"nl": "het vuur", "en": "the fire"}, {"nl": "de verjaardag", "en": "the birthday"}, {"nl": "duur", "en": "expensive"}, {"nl": "goedkoop", "en": "cheap/ less expensive"}], "Lesson 2": [{"nl": "snoep", "en": "snack/candies"}, {"nl": "volwassen", "en": "adults"}, {"nl": "gezellig", "en": "cozy/comfortable"}, {"nl": "draag/draagt/dragen", "en": "wear"}, {"nl": "meestal", "en": "mostly"}, {"nl": "merk", "en": "notice/see"}, {"nl": "versierd", "en": "decorate"}, {"nl": "vier/viert/vieren", "en": "celeberate"}, {"nl": "verhalen", "en": "stories"}, {"nl": "liedjes", "en": "songs"}, {"nl": "bezig/druk", "en": "busy"}, {"nl": "gek", "en": "crazy"}, {"nl": "de taart", "en": "the cake"}, {"nl": "de kaas", "en": "cheese"}, {"nl": "kaarsjes", "en": "candles"}, {"nl": "zaal", "en": "hall"}, {"nl": "uitnodiging", "en": "invite"}, {"nl": "rust", "en": "rest"}, {"nl": "geslaagd", "en": "pass"}, {"nl": "doodgegaan", "en": "died"}, {"nl": "kennisen", "en": "acquaintance"}, {"nl": "begrafenis", "en": "funeral ceremony"}, {"nl": "paar", "en": "few"}, {"nl": "schamen", "en": "shame"}, {"nl": "sterkte", "en": "strength"}, {"nl": "sturen", "en": "send"}, {"nl": "beterschap", "en": "recover soon"}, {"nl": "wandelen", "en": "walk"}, {"nl": "op passen", "en": "baby sit"}, {"nl": "solliciatiegesprek", "en": "job interview"}, {"nl": "cadeutjes", "en": "gift"}, {"nl": "cadeaubon", "en": "gift voucher"}, {"nl": "de beurt", "en": "the turn"}, {"nl": "zoenen", "en": "kiss"}, {"nl": "aanraken", "en": "to touch"}, {"nl": "aan kijken", "en": "to see"}, {"nl": "weer weggaan", "en": "leave again"}, {"nl": "last van elkaar", "en": "bother . Disturb (Each other)"}, {"nl": "in elk geval", "en": "in each case"}, {"nl": "rustig", "en": "quietly"}, {"nl": "zachter", "en": "softer"}, {"nl": "vervelend", "en": "annoying"}, {"nl": "wachtkamer", "en": "waiting room"}, {"nl": "roept", "en": "call"}, {"nl": "boos", "en": "angry"}, {"nl": "blij", "en": "happy"}, {"nl": "verdrietig", "en": "sad"}, {"nl": "bang", "en": "afraid"}, {"nl": "gevoelens", "en": "feelings"}, {"nl": "verrasing", "en": "surprise"}, {"nl": "vriendelijk", "en": "friendly"}, {"nl": "trekken", "en": "pull"}, {"nl": "duwen", "en": "push"}, {"nl": "de opleiding", "en": "the education"}, {"nl": "het onderwijs", "en": "education"}, {"nl": "opvoeding", "en": "education / upbringing"}, {"nl": "ontwinkelling", "en": "development"}, {"nl": "basisonderwijs", "en": "primary education"}, {"nl": "voorgezetonderwijs", "en": "secondary education"}, {"nl": "de gewoonte", "en": "habit"}], "Lesson 3": [{"nl": "Zorg", "en": "care"}, {"nl": "het abonnement", "en": "the subscription"}, {"nl": "rekening", "en": "bill"}, {"nl": "handtekening", "en": "signature"}, {"nl": "tekening", "en": "count"}, {"nl": "een paar", "en": "few"}, {"nl": "de tolk", "en": "interpretor"}, {"nl": "de vertaler", "en": "translator"}, {"nl": "de taal", "en": "the language"}, {"nl": "de klacht", "en": "the complaint"}, {"nl": "tevreden", "en": "satisfy"}, {"nl": "het aan melden", "en": "login/sign up"}, {"nl": "gebeuren", "en": "to happen"}, {"nl": "het gebouw", "en": "the building"}, {"nl": "de onderzoek", "en": "the research"}, {"nl": "het alarmnummer", "en": "the emergency number"}, {"nl": "de belasting", "en": "the tax"}, {"nl": "the bibiliotheek", "en": "the library"}, {"nl": "het verzekering", "en": "the insurance"}, {"nl": "de bijdrage", "en": "contribution"}, {"nl": "de bloeddruk", "en": "the blood pressure"}, {"nl": "het etiket", "en": "the label"}, {"nl": "het recept", "en": "the recipe"}, {"nl": "het medicijn", "en": "the medicine"}, {"nl": "het identiteitsbewijs", "en": "ID"}, {"nl": "de koorts", "en": "the fever"}, {"nl": "de griep", "en": "the flu"}, {"nl": "de seks", "en": "the sex"}, {"nl": "de soa", "en": "sexual disease"}, {"nl": "de spoediesende hulp", "en": "first aid"}, {"nl": "verplicht", "en": "mandatory"}, {"nl": "verslaafd", "en": "addiction"}, {"nl": "zwanger", "en": "pregnancy"}, {"nl": "de dierentuin", "en": "the zoo"}, {"nl": "de boederij", "en": "the farm"}, {"nl": "het strand", "en": "park / Beach"}, {"nl": "het lid", "en": "the member"}, {"nl": "bewegen", "en": "to move"}, {"nl": "veilige seks", "en": "safe sex"}, {"nl": "slikt", "en": "swallows"}, {"nl": "dodelijk", "en": "deadly"}, {"nl": "bederven", "en": "spoil"}, {"nl": "gaar", "en": "cooked"}, {"nl": "kans", "en": "chance"}, {"nl": "kies", "en": "choose"}, {"nl": "polikliniek", "en": "outpatient"}, {"nl": "de afdeling", "en": "the department"}, {"nl": "snel hulp", "en": "fast help"}, {"nl": "de snelweg", "en": "the high way"}, {"nl": "hoog", "en": "high"}, {"nl": "laag", "en": "low"}, {"nl": "pijn", "en": "pain"}, {"nl": "kiespijn", "en": "toothpain"}, {"nl": "het lichaam", "en": "the body"}], "Lesson 4": [{"nl": "ruimte", "en": "space"}, {"nl": "de stad", "en": "the city"}, {"nl": "de staat", "en": "the state"}, {"nl": "de dorp", "en": "the village"}, {"nl": "gebouw", "en": "building"}, {"nl": "eengezinswoning", "en": "single family living"}, {"nl": "vrijstaand huis", "en": "detached house"}, {"nl": "huren", "en": "to rent"}, {"nl": "etage", "en": "floor"}, {"nl": "verzorginghuis", "en": "nursing house"}, {"nl": "Hypotheek", "en": "mortage"}, {"nl": "Verzekeringmaatschapij", "en": "insurance company"}, {"nl": "afhankelijk", "en": "dependent"}, {"nl": "vaste baan", "en": "permanent job"}, {"nl": "tijdelijk baan", "en": "temporary job"}, {"nl": "beslissing", "en": "decision"}, {"nl": "geschikt", "en": "suitable"}, {"nl": "de verkoper", "en": "the seller"}, {"nl": "onderhoud", "en": "maintanence"}, {"nl": "schilderen", "en": "painting"}, {"nl": "vervangen", "en": "replace"}, {"nl": "socialehuurwoning", "en": "social housing"}, {"nl": "verandert", "en": "changes"}, {"nl": "woningzoekende", "en": "house hunter"}, {"nl": "kiezen", "en": "choose"}, {"nl": "meteen", "en": "immediately"}, {"nl": "laag inkomen", "en": "low income"}, {"nl": "leeftijd", "en": "age"}, {"nl": "reageren", "en": "respond"}, {"nl": "inschrijven", "en": "register"}, {"nl": "urgentieverklaring", "en": "urgent statement"}, {"nl": "aanvragen", "en": "request"}, {"nl": "scheiden", "en": "divorced"}, {"nl": "gezondheid", "en": "health"}, {"nl": "huisbaas", "en": "house owner"}, {"nl": "eigenaar", "en": "owner"}, {"nl": "de regels", "en": "the rules"}, {"nl": "verhuurder", "en": "owner / landlord"}, {"nl": "verhuizen", "en": "change of place"}, {"nl": "Huurtoeslag", "en": "house allowance"}, {"nl": "kranen", "en": "tap"}, {"nl": "buitenkant", "en": "outside"}, {"nl": "afvalstoffenheffing", "en": "garbage tax"}, {"nl": "rioolheffing", "en": "sewage tax/ drainage"}, {"nl": "onroerendezaakbelasting", "en": "real estate tax"}, {"nl": "uitkering", "en": "benefit"}, {"nl": "kwijtschelding", "en": "remission"}, {"nl": "vergunningen", "en": "permit/license"}, {"nl": "toestemming", "en": "permission"}, {"nl": "weghalen", "en": "remove"}, {"nl": "rotzooi", "en": "mess"}, {"nl": "het milieu", "en": "environment"}, {"nl": "opgehaald", "en": "picked"}, {"nl": "bekeuring", "en": "ticket/fine"}, {"nl": "energiebedrijf", "en": "energy company"}, {"nl": "verwarming", "en": "heating"}, {"nl": "iemand", "en": "somebody"}, {"nl": "de energierekening", "en": "the energy bill"}, {"nl": "vast bedrag", "en": "fixed amount"}, {"nl": "termijn bedrag", "en": "instalment amount"}, {"nl": "jaarrekening", "en": "year bill"}, {"nl": "afgesloten", "en": "locked"}, {"nl": "klacht", "en": "complaint"}, {"nl": "storing", "en": "Faults"}, {"nl": "apparaat", "en": "device"}, {"nl": "gevaarlijk", "en": "dangerous"}, {"nl": "loodgieter", "en": "plumber"}, {"nl": "zuinig", "en": "economical"}, {"nl": "kabelaansluiting", "en": "cable connection"}, {"nl": "abonnement", "en": "subscription"}, {"nl": "beltegoed", "en": "call credit"}, {"nl": "rook", "en": "smoke"}, {"nl": "brand", "en": "fire"}, {"nl": "het ongeluk", "en": "the accident"}, {"nl": "inboedelverzekering", "en": "household insurance"}, {"nl": "schade", "en": "damage"}, {"nl": "opstalverzekering", "en": "building insurance"}, {"nl": "storm", "en": "strom"}, {"nl": "brommer", "en": "motorbike"}, {"nl": "polis", "en": "policy"}, {"nl": "de politie", "en": "the police"}, {"nl": "bonnen", "en": "receipts"}], "Lesson 5": [{"nl": "instanties", "en": "organization"}, {"nl": "de portemonee", "en": "purse"}, {"nl": "verblijfsvergunning", "en": "resident permit"}, {"nl": "het maatschappelijk werk", "en": "the social work"}, {"nl": "identiteitsbewijs", "en": "id card"}, {"nl": "rijbewijs", "en": "driving license"}, {"nl": "conducteur", "en": "driver"}, {"nl": "Aangifte", "en": "declaration"}, {"nl": "geweld", "en": "violence"}, {"nl": "geslagen", "en": "hurted"}, {"nl": "bedriegd", "en": "threaten"}, {"nl": "de dief", "en": "the theif"}, {"nl": "spullen", "en": "stuffs"}, {"nl": "verzekering", "en": "insurance"}, {"nl": "ongeluk", "en": "accident"}, {"nl": "alarmnummer", "en": "emergency number"}, {"nl": "last van", "en": "disturbance"}, {"nl": "het lawaai", "en": "the noise"}, {"nl": "trek", "en": "pull"}, {"nl": "bewijs", "en": "evidence"}, {"nl": "gestorven", "en": "dead"}, {"nl": "uittreksel", "en": "extract"}, {"nl": "betalen", "en": "pay"}, {"nl": "de regering", "en": "the government"}, {"nl": "verdient", "en": "earns"}, {"nl": "wegen", "en": "roads"}, {"nl": "heffingskorting", "en": "taxcredit"}, {"nl": "kindgebonden budget", "en": "child bounded budget"}, {"nl": "bezwaar", "en": "objection"}, {"nl": "termijnen", "en": "terms/installment"}, {"nl": "toeslagen", "en": "allowances"}, {"nl": "saldo", "en": "balance"}, {"nl": "tekort", "en": "shortage"}, {"nl": "contant geld", "en": "cash"}, {"nl": "bankpas", "en": "bankcard"}, {"nl": "intoetsen", "en": "press"}, {"nl": "overmaken", "en": "transfer"}, {"nl": "machtiging", "en": "authorization"}, {"nl": "incasso", "en": "collection"}, {"nl": "aaceptgiro", "en": "Payment slip"}, {"nl": "wachtwoord", "en": "password"}, {"nl": "het bedrag", "en": "amount"}, {"nl": "regels", "en": "rights"}, {"nl": "verlengen", "en": "extend"}, {"nl": "waarmee", "en": "by which"}, {"nl": "verenigde staten", "en": "United states"}, {"nl": "loket", "en": "Counter"}, {"nl": "bepaalde tijd", "en": "fixed time"}, {"nl": "onbepaalde", "en": "indefinite"}, {"nl": "asielzoeker", "en": "assylum seekere"}, {"nl": "rechten", "en": "rights"}, {"nl": "de afbeelding", "en": "the picture"}, {"nl": "Vrijstelling", "en": "exemption"}, {"nl": "gebeurt", "en": "happens"}], "Lesson 6": [{"nl": "de volwassenen", "en": "the adults"}, {"nl": "hoofdstuk", "en": "chapter"}, {"nl": "de verloskundige", "en": "the midwife"}, {"nl": "controles", "en": "checkups"}, {"nl": "bevallen", "en": "delivery"}, {"nl": "kraamhulp", "en": "maternity assistance"}, {"nl": "meten en wegen", "en": "measure and weigh"}, {"nl": "de ontwikkeling", "en": "the developemnt"}, {"nl": "advies", "en": "advice"}, {"nl": "vaccinaties", "en": "vaccinations"}, {"nl": "prik", "en": "injection"}, {"nl": "tegen ziektes", "en": "against diseases"}, {"nl": "Groeiboek", "en": "growth book"}, {"nl": "gasouderbureau", "en": "childcare agency"}, {"nl": "buitenschool", "en": "after school / outdoor school"}, {"nl": "kinderopvangtoeslag", "en": "child care allowance"}, {"nl": "kinder bijslag", "en": "child benefits"}, {"nl": "de kleren", "en": "the clothes"}, {"nl": "de leeftijd", "en": "age"}, {"nl": "niet slaan", "en": "do not beat"}, {"nl": "ruzie", "en": "fight / Quarrel"}, {"nl": "Jeugdzorg", "en": "youth service / youth care"}, {"nl": "mishandeld", "en": "abused / mistreat"}, {"nl": "straf", "en": "punishment"}, {"nl": "Meldpunt", "en": "contact point / hotline"}, {"nl": "lid worden", "en": "become a member / join"}, {"nl": "voorlezen", "en": "read aloud"}, {"nl": "verantwoordelijk", "en": "responsible"}, {"nl": "boete", "en": "fine"}, {"nl": "onderwijs", "en": "education"}, {"nl": "openbare scholen", "en": "public schools"}, {"nl": "leerplicht", "en": "mandate learning / compulsory education"}, {"nl": "vrijheid", "en": "freedom"}, {"nl": "knutselen", "en": "crafts"}, {"nl": "De voorschool", "en": "the preschool"}, {"nl": "wachtlijst", "en": "waiting list"}, {"nl": "juf", "en": "teacher"}, {"nl": "tekenen", "en": "to draw"}, {"nl": "tellen", "en": "count"}, {"nl": "rekenen", "en": "calculate"}, {"nl": "de vakken", "en": "the subjects"}, {"nl": "aardrijkskunde", "en": "geography"}, {"nl": "gescheidenis", "en": "history"}, {"nl": "de schoolgids", "en": "school diary"}, {"nl": "strookje", "en": "strips / slip / label"}, {"nl": "rapport", "en": "report"}, {"nl": "voortgezet onderwijs", "en": "secondary education"}, {"nl": "ouderavond", "en": "parents evening"}, {"nl": "gesprek", "en": "conversation"}, {"nl": "overblijven", "en": "over stay"}, {"nl": "beroep", "en": "profession"}, {"nl": "de oudbijdrage", "en": "the old contribution"}], "Lesson 7": [{"nl": "verdienen", "en": "earn"}, {"nl": "geld", "en": "money"}, {"nl": "Betaald", "en": "Pay"}, {"nl": "eigen bedrijf", "en": "Own company"}, {"nl": "Vrijwillingerwerk", "en": "Volunteer work"}, {"nl": "Tijdelijk", "en": "temperory"}, {"nl": "duidelijk", "en": "clearly"}, {"nl": "Flexwerker", "en": "Flexible worker"}, {"nl": "Zelfstandig ondernemer", "en": "self employed Entrepreneur"}, {"nl": "Uitzend bereau", "en": "Employement agency"}, {"nl": "verboden", "en": "forbidden"}, {"nl": "regelmatige", "en": "regular"}, {"nl": "onregelmatige", "en": "irregular"}, {"nl": "werknemer", "en": "employee"}, {"nl": "werkgever", "en": "employer"}, {"nl": "monteurs", "en": "mechanic"}, {"nl": "solliciteren", "en": "apply"}, {"nl": "past", "en": "suits"}, {"nl": "diensten sector", "en": "service sector"}, {"nl": "zorg en welfare", "en": "care and welfare"}, {"nl": "Bouw", "en": "construction"}, {"nl": "Horeca", "en": "Catering"}, {"nl": "Handel", "en": "Trade"}, {"nl": "vervoer", "en": "Transport"}, {"nl": "Chauffeur", "en": "Driver"}, {"nl": "Beveiliging", "en": "Security"}, {"nl": "groene sector", "en": "green sector"}, {"nl": "opleiding", "en": "education"}, {"nl": "waarderen", "en": "appreciate"}, {"nl": "Ongeschoold", "en": "Uneducated"}, {"nl": "ROC", "en": "regionaal opleidingencentrum / Regional training center"}, {"nl": "stage lopen", "en": "internship"}, {"nl": "Ervaring", "en": "experience"}, {"nl": "Lager niveau", "en": "Lower level"}, {"nl": "verpleegkundige", "en": "nurse"}, {"nl": "Kwalitieten", "en": "Qualities"}, {"nl": "betrouwbaar", "en": "reliable"}, {"nl": "doorzetter", "en": "go-getter"}, {"nl": "handig", "en": "useful"}, {"nl": "zelfstandig", "en": "independent"}, {"nl": "zorgzaam", "en": "caring"}, {"nl": "geduld", "en": "patient"}, {"nl": "vuil werk", "en": "dirt work"}, {"nl": "zwaar werk", "en": "strong work"}, {"nl": "werkzoekende", "en": "work seeker"}, {"nl": "kwijtraakt", "en": "loses"}, {"nl": "werkloos", "en": "unemployed"}, {"nl": "vacatures", "en": "vacancy"}, {"nl": "bijstand", "en": "assistance"}, {"nl": "spaargeld", "en": "savings money"}, {"nl": "plichten", "en": "duties"}, {"nl": "uitzend kracht", "en": "temporary worker"}, {"nl": "de krant", "en": "the newspaper"}, {"nl": "vaker", "en": "more often"}, {"nl": "De functie", "en": "the position"}, {"nl": "De taken", "en": "the tasks"}, {"nl": "De functie-eisen", "en": "requirements / The job requirements"}, {"nl": "stellen", "en": "to ask / Set"}, {"nl": "ondernemingsplan", "en": "business plan"}, {"nl": "De Kamer van Koophandel", "en": "Chamber of Commerce"}, {"nl": "de wet", "en": "the law"}, {"nl": "Rechten en Plichten", "en": "Rights and duties"}, {"nl": "Het arbeidscontract", "en": "Employment contract"}, {"nl": "proeftijd", "en": "probation"}, {"nl": "ontslag", "en": "dismiss"}, {"nl": "Cao-", "en": "Agreement"}, {"nl": "minimumloon", "en": "minimum wage"}, {"nl": "opbellen", "en": "call"}, {"nl": "Loonstrook", "en": "payslip"}, {"nl": "nettosaliris", "en": "net salary"}, {"nl": "brutosaliris", "en": "gross salary"}, {"nl": "regering", "en": "government"}, {"nl": "pensioen", "en": "pension"}, {"nl": "afsluiten", "en": "shutdown"}, {"nl": "jaaropgave", "en": "annual statement"}, {"nl": "De Vakbond", "en": "Union"}, {"nl": "Overleg", "en": "Consultation"}, {"nl": "werkoverleg", "en": "work meeting"}, {"nl": "vergadering", "en": "meeting"}, {"nl": "de leiding", "en": "the leadership"}, {"nl": "afdeling", "en": "department"}, {"nl": "praatje", "en": "chat"}, {"nl": "functioneringsgesprek", "en": "performance appraisal"}, {"nl": "Discriminatie", "en": "Discrimination"}, {"nl": "grapje", "en": "just kidding"}], "Lesson 8": [{"nl": "alleen", "en": "alone"}, {"nl": "gescheiden", "en": "seperated"}, {"nl": "huwelijken", "en": "weddings"}, {"nl": "samenlevingscontract tekenen", "en": "Living together contract"}, {"nl": "gemiddeld", "en": "average"}, {"nl": "gezin", "en": "family"}, {"nl": "ouder", "en": "parents"}, {"nl": "ontmoeten", "en": "meet"}, {"nl": "keren", "en": "times"}, {"nl": "afspraak", "en": "appointment"}, {"nl": "de puberteit", "en": "menstruation / Puberty"}, {"nl": "seksuale voorlichting", "en": "sex information"}, {"nl": "verliefd", "en": "in love"}, {"nl": "dominee", "en": "pastor"}, {"nl": "bloot", "en": "naked"}, {"nl": "benen", "en": "legs"}, {"nl": "Lichamelijk", "en": "physical"}, {"nl": "openbaar", "en": "public"}, {"nl": "omgaan met elkaar", "en": "interact with each other"}, {"nl": "geloof", "en": "belief"}, {"nl": "grondwet", "en": "base law / constitution"}, {"nl": "huishouden", "en": "house hold / housekeeping"}, {"nl": "leiding", "en": "leading"}, {"nl": "gewoontes", "en": "habits"}, {"nl": "keuzes", "en": "choices"}, {"nl": "verbieden", "en": "reject / prohibit"}, {"nl": "verkrachting", "en": "rape"}, {"nl": "gevangenis", "en": "prison"}, {"nl": "dwingen", "en": "force"}, {"nl": "Incest", "en": "family sex"}, {"nl": "neef en nicht", "en": "niece and nephew"}, {"nl": "heel weinig", "en": "much less"}, {"nl": "vermoord", "en": "murder"}, {"nl": "eerwraak", "en": "honour kill"}, {"nl": "Besnijdenis", "en": "Muslim custom"}, {"nl": "mes", "en": "knife"}, {"nl": "wapens", "en": "weapons"}, {"nl": "mishandeling", "en": "Violence"}, {"nl": "Abortus", "en": "abortion"}, {"nl": "Ethunasie", "en": "Mercy killing"}, {"nl": "te sterven", "en": "to die"}, {"nl": "de wet", "en": "the law"}], "Lesson 9": [{"nl": "de geschiedenis", "en": "the history"}, {"nl": "het gebeid", "en": "the area"}, {"nl": "de middleleeuwen", "en": "the middle ages"}, {"nl": "de leider", "en": "the leader"}, {"nl": "de lage landen", "en": "the low land"}, {"nl": "De boeren", "en": "the farmer"}, {"nl": "arm", "en": "poor"}, {"nl": "rijk mensen", "en": "rich people"}, {"nl": "muur", "en": "wall"}, {"nl": "onstonden", "en": "emerged"}, {"nl": "kastelen", "en": "castle"}, {"nl": "afval", "en": "waste"}, {"nl": "bezet", "en": "occupy / busy"}, {"nl": "Oorlog", "en": "war"}, {"nl": "macht", "en": "power"}, {"nl": "gedood", "en": "died"}, {"nl": "verzet", "en": "resist"}, {"nl": "gevochten", "en": "fought"}, {"nl": "doodgeschoten", "en": "shot to death"}, {"nl": "Verenigde", "en": "united"}, {"nl": "Het wilhelmus", "en": "national anthem"}, {"nl": "volkslied", "en": "people song"}, {"nl": "De handel", "en": "the trade"}, {"nl": "de gouden era", "en": "golden era"}, {"nl": "voeren", "en": "travel"}, {"nl": "specerijn", "en": "spices"}, {"nl": "slaven", "en": "slaves"}, {"nl": "schepen", "en": "ships"}, {"nl": "Azie", "en": "asia"}, {"nl": "betaalen", "en": "pays"}, {"nl": "gracht", "en": "canal"}, {"nl": "bewaarden", "en": "saved/kept"}, {"nl": "pakhuizen", "en": "warehouse"}, {"nl": "De Kunst", "en": "the art"}, {"nl": "beroemd", "en": "famous"}, {"nl": "musea", "en": "museum"}, {"nl": "De Nachtwacht", "en": "the night wait"}, {"nl": "eerste grondwet", "en": "first law"}, {"nl": "koninkrijk", "en": "kingdom"}, {"nl": "de arbeiders", "en": "the labourers"}, {"nl": "heel zwaar", "en": "very strong"}, {"nl": "verloren", "en": "lost"}, {"nl": "partij", "en": "party"}, {"nl": "Joden", "en": "jews"}, {"nl": "geheime kamers", "en": "secret rooms"}, {"nl": "onderduiken", "en": "underground"}, {"nl": "Een moeilijke tijd", "en": "a difficult time"}, {"nl": "verdelen", "en": "divide"}, {"nl": "welvaart", "en": "welfare"}, {"nl": "koelkast", "en": "fridge"}, {"nl": "weilanden", "en": "Grassland / meadow"}, {"nl": "de brug", "en": "bridge"}, {"nl": "allochtonen", "en": "immigrants"}, {"nl": "overstroming", "en": "flood"}, {"nl": "de eeuw", "en": "the era"}], "Lesson 10": [{"nl": "Het koninkrijk", "en": "kingdom"}, {"nl": "eiland", "en": "island"}, {"nl": "bijzondere", "en": "special"}, {"nl": "de inwoners", "en": "the people/ the habitants"}, {"nl": "meerderheid", "en": "majority"}, {"nl": "minderheid", "en": "minority"}, {"nl": "Het bestuur", "en": "the board"}, {"nl": "ministers", "en": "ministers"}, {"nl": "plannen", "en": "plan"}, {"nl": "het gezicht", "en": "the face"}, {"nl": "gouden koets", "en": "golden coach"}, {"nl": "troonrede", "en": "speech from the throne"}, {"nl": "de leider", "en": "the leader"}, {"nl": "tussen", "en": "between"}, {"nl": "staatsecretaris", "en": "state secretary"}, {"nl": "het kabinet", "en": "the cabinet"}, {"nl": "taak", "en": "task"}, {"nl": "vergaderingen", "en": "meetings"}, {"nl": "voorstel", "en": "proposal"}, {"nl": "waar", "en": "true"}, {"nl": "niet waar", "en": "not true"}, {"nl": "gebouwd", "en": "built"}, {"nl": "gementeeraad", "en": "gemente board"}, {"nl": "de burgemeester", "en": "the mayor"}, {"nl": "deelgementeen", "en": "shared municiplaity"}, {"nl": "wetten", "en": "laws"}, {"nl": "veiligheid", "en": "safety"}, {"nl": "Het waterschap", "en": "water authority"}, {"nl": "de ideeen", "en": "the ideas"}, {"nl": "tweedekamer", "en": "second chamber /room"}, {"nl": "strenge regels", "en": "strictrules"}, {"nl": "linkse en rechtse", "en": "left and right"}, {"nl": "de reclame", "en": "the advertisement"}, {"nl": "lijstrekker", "en": "party leader"}, {"nl": "stembiljet", "en": "ballot paper"}, {"nl": "De uitslag", "en": "the result"}, {"nl": "Verkiezingen", "en": "elections"}, {"nl": "godsdienst", "en": "religion"}, {"nl": "strijd", "en": "fight"}, {"nl": "hoofddoek", "en": "head scarf"}, {"nl": "de rechter", "en": "the judge"}, {"nl": "staking", "en": "strike"}], "100 Word": [{"nl": "zie", "en": "see"}, {"nl": "kijk", "en": "watch"}, {"nl": "zit", "en": "sit"}, {"nl": "sta", "en": "stand"}, {"nl": "ga", "en": "go"}, {"nl": "zoek", "en": "search"}, {"nl": "vind", "en": "find"}, {"nl": "loop", "en": "walk"}, {"nl": "ren", "en": "run"}, {"nl": "schrijf", "en": "write"}, {"nl": "lees", "en": "read"}, {"nl": "luister", "en": "listen"}, {"nl": "spreek", "en": "speak"}, {"nl": "speel", "en": "play"}, {"nl": "praat", "en": "talk"}, {"nl": "spring", "en": "jump"}, {"nl": "krijg", "en": "get"}, {"nl": "geef", "en": "give"}, {"nl": "word", "en": "become"}, {"nl": "maak", "en": "make"}, {"nl": "(h)groei", "en": "grow"}, {"nl": "koop", "en": "buy"}, {"nl": "verkoop", "en": "sell"}, {"nl": "vraag", "en": "ask"}, {"nl": "neem", "en": "take"}, {"nl": "antwoord", "en": "answer"}, {"nl": "rijd", "en": "ride"}, {"nl": "eet", "en": "eat"}, {"nl": "drink", "en": "drink"}, {"nl": "bel", "en": "call"}, {"nl": "betaal", "en": "pay"}, {"nl": "begin", "en": "begin"}, {"nl": "f(ie)ts", "en": "bike"}, {"nl": "duw", "en": "push"}, {"nl": "blijf", "en": "stay"}, {"nl": "kook", "en": "cook"}, {"nl": "breek", "en": "break"}, {"nl": "breng", "en": "bring"}, {"nl": "bind", "en": "tie"}, {"nl": "woon", "en": "live"}, {"nl": "dank", "en": "thank"}, {"nl": "denk", "en": "think"}, {"nl": "zing", "en": "sing"}, {"nl": "dans", "en": "dance"}, {"nl": "voel", "en": "feel"}, {"nl": "draag", "en": "wear"}, {"nl": "kom", "en": "come"}, {"nl": "wacht", "en": "wait"}, {"nl": "gebruik", "en": "use"}, {"nl": "begrijp", "en": "understand"}, {"nl": "hoop", "en": "hope"}, {"nl": "geniet", "en": "enjoy"}, {"nl": "wang", "en": "catch"}, {"nl": "groet", "en": "greet"}, {"nl": "wens", "en": "wish"}, {"nl": "hou van", "en": "Love"}, {"nl": "g(oo)i", "en": "throw"}, {"nl": "help", "en": "help"}, {"nl": "hoor", "en": "hear"}, {"nl": "snij", "en": "cut"}, {"nl": "plak", "en": "paste"}, {"nl": "bezit", "en": "own"}, {"nl": "huur", "en": "rent"}, {"nl": "weet", "en": "know"}, {"nl": "leer", "en": "teach"}, {"nl": "lieg", "en": "lie"}, {"nl": "probeer", "en": "try"}, {"nl": "herhaal", "en": "repeat"}, {"nl": "regen", "en": "rain"}, {"nl": "reis", "en": "travel"}, {"nl": "reken", "en": "count/calculate"}, {"nl": "huil", "en": "cry"}, {"nl": "roep", "en": "shout"}, {"nl": "werk", "en": "work"}, {"nl": "was", "en": "wash"}, {"nl": "stuur", "en": "send"}, {"nl": "studeer", "en": "study"}, {"nl": "val", "en": "fall"}, {"nl": "vaar", "en": "sail"}, {"nl": "douche", "en": "shower/bath"}, {"nl": "doe", "en": "do"}, {"nl": "smaak", "en": "taste"}, {"nl": "zwem", "en": "swim"}, {"nl": "vergeet", "en": "forget"}, {"nl": "vlieg", "en": "fly"}, {"nl": "lach", "en": "laugh"}, {"nl": "lig", "en": "lay down"}, {"nl": "teken", "en": "draw"}, {"nl": "droom", "en": "dream"}, {"nl": "toon", "en": "show"}, {"nl": "red", "en": "save"}, {"nl": "sluit", "en": "close"}, {"nl": "leen", "en": "lend/borrow"}, {"nl": "bestel", "en": "order (something like book)"}, {"nl": "vaak", "en": "often"}, {"nl": "bijna", "en": "almost"}, {"nl": "ook", "en": "also"}, {"nl": "die", "en": "that"}, {"nl": "enzovoort", "en": "and so on"}, {"nl": "bijvoorbeeld", "en": "example"}, {"nl": "niets", "en": "nothing"}, {"nl": "iets", "en": "something"}, {"nl": "al", "en": "already"}, {"nl": "altijd", "en": "always"}, {"nl": "nooit", "en": "never"}, {"nl": "ooit", "en": "ever"}, {"nl": "allemaal", "en": "all of you"}, {"nl": "helemaal", "en": "all/whole"}, {"nl": "veel", "en": "many/much"}, {"nl": "iedereen", "en": "everyone"}, {"nl": "nog", "en": "yet"}, {"nl": "keer", "en": "time"}, {"nl": "maar", "en": "but"}, {"nl": "weer", "en": "again"}]}};
-  const LESSONS = RAW.lessons || [];
-  const DATA = RAW.data || {};
+  // ---- Data (Lessons 9 & 10) ----
+  const ROWS = [
+    {"lesson":"Lesson 9","nl":"de geschiedenis","en":"the history"},
+    {"lesson":"Lesson 9","nl":"het gebeid","en":"the area"},
+    {"lesson":"Lesson 9","nl":"de middleleeuwen","en":"the middle ages"},
+    {"lesson":"Lesson 9","nl":"de leider","en":"the leader"},
+    {"lesson":"Lesson 9","nl":"de lage landen","en":"the low land"},
+    {"lesson":"Lesson 9","nl":"De boeren","en":"the farmer"},
+    {"lesson":"Lesson 9","nl":"arm","en":"poor"},
+    {"lesson":"Lesson 9","nl":"rijk mensen","en":"rich people"},
+    {"lesson":"Lesson 9","nl":"muur","en":"wall"},
+    {"lesson":"Lesson 9","nl":"onstonden","en":"emerged"},
+    {"lesson":"Lesson 9","nl":"kastelen","en":"castle"},
+    {"lesson":"Lesson 9","nl":"afval","en":"waste"},
+    {"lesson":"Lesson 9","nl":"bezet","en":"occupy / busy"},
+    {"lesson":"Lesson 9","nl":"Oorlog","en":"war"},
+    {"lesson":"Lesson 9","nl":"macht","en":"power"},
+    {"lesson":"Lesson 9","nl":"gedood","en":"died"},
+    {"lesson":"Lesson 9","nl":"verzet","en":"resist"},
+    {"lesson":"Lesson 9","nl":"gevochten","en":"fought"},
+    {"lesson":"Lesson 9","nl":"doodgeschoten","en":"shot to death"},
+    {"lesson":"Lesson 9","nl":"Verenigde","en":"united"},
+    {"lesson":"Lesson 9","nl":"Het wilhelmus","en":"national anthem"},
+    {"lesson":"Lesson 9","nl":"volkslied","en":"people song"},
+    {"lesson":"Lesson 9","nl":"De handel","en":"the trade"},
+    {"lesson":"Lesson 9","nl":"de gouden era","en":"golden era"},
+    {"lesson":"Lesson 9","nl":"voeren","en":"travel"},
+    {"lesson":"Lesson 9","nl":"specerijn","en":"spices"},
+    {"lesson":"Lesson 9","nl":"slaven","en":"slaves"},
+    {"lesson":"Lesson 9","nl":"schepen","en":"ships"},
+    {"lesson":"Lesson 9","nl":"Azie","en":"asia"},
+    {"lesson":"Lesson 9","nl":"betaalen","en":"pays"},
+    {"lesson":"Lesson 9","nl":"gracht","en":"canal"},
+    {"lesson":"Lesson 9","nl":"bewaarden","en":"saved/kept"},
+    {"lesson":"Lesson 9","nl":"pakhuizen","en":"warehouse"},
+    {"lesson":"Lesson 9","nl":"De Kunst","en":"the art"},
+    {"lesson":"Lesson 9","nl":"beroemd","en":"famous"},
+    {"lesson":"Lesson 9","nl":"musea","en":"museum"},
+    {"lesson":"Lesson 9","nl":"De Nachtwacht","en":"the night wait"},
+    {"lesson":"Lesson 9","nl":"eerste grondwet","en":"first law"},
+    {"lesson":"Lesson 9","nl":"koninkrijk","en":"kingdom"},
+    {"lesson":"Lesson 9","nl":"de arbeiders","en":"the labourers"},
+    {"lesson":"Lesson 9","nl":"heel zwaar","en":"very strong"},
+    {"lesson":"Lesson 9","nl":"verloren","en":"lost"},
+    {"lesson":"Lesson 9","nl":"partij","en":"party"},
+    {"lesson":"Lesson 9","nl":"Joden","en":"jews"},
+    {"lesson":"Lesson 9","nl":"geheime kamers","en":"secret rooms"},
+    {"lesson":"Lesson 9","nl":"onderduiken","en":"underground"},
+    {"lesson":"Lesson 9","nl":"Een moeilijke tijd","en":"a difficult time"},
+    {"lesson":"Lesson 9","nl":"verdelen","en":"divide"},
+    {"lesson":"Lesson 9","nl":"welvaart","en":"welfare"},
+    {"lesson":"Lesson 9","nl":"koelkast","en":"fridge"},
+    {"lesson":"Lesson 9","nl":"weilanden","en":"Grassland / meadow"},
+    {"lesson":"Lesson 9","nl":"de brug","en":"bridge"},
+    {"lesson":"Lesson 9","nl":"allochtonen","en":"immigrants"},
+    {"lesson":"Lesson 9","nl":"overstroming","en":"flood"},
+    {"lesson":"Lesson 9","nl":"de eeuw","en":"the era"},
+    {"lesson":"Lesson 10","nl":"Het koninkrijk","en":"kingdom"},
+    {"lesson":"Lesson 10","nl":"eiland","en":"island"},
+    {"lesson":"Lesson 10","nl":"bijzondere","en":"special"},
+    {"lesson":"Lesson 10","nl":"de inwoners","en":"the people/ the habitants"},
+    {"lesson":"Lesson 10","nl":"meerderheid","en":"majority"},
+    {"lesson":"Lesson 10","nl":"minderheid","en":"minority"},
+    {"lesson":"Lesson 10","nl":"Het bestuur","en":"the board"},
+    {"lesson":"Lesson 10","nl":"ministers","en":"ministers"},
+    {"lesson":"Lesson 10","nl":"plannen","en":"plan"},
+    {"lesson":"Lesson 10","nl":"het gezicht","en":"the face"},
+    {"lesson":"Lesson 10","nl":"gouden koets","en":"golden coach"},
+    {"lesson":"Lesson 10","nl":"troonrede","en":"speech from the throne"},
+    {"lesson":"Lesson 10","nl":"de leider","en":"the leader"},
+    {"lesson":"Lesson 10","nl":"tussen","en":"between"},
+    {"lesson":"Lesson 10","nl":"staatsecretaris","en":"state secretary"},
+    {"lesson":"Lesson 10","nl":"het kabinet","en":"the cabinet"},
+    {"lesson":"Lesson 10","nl":"taak","en":"task"},
+    {"lesson":"Lesson 10","nl":"vergaderingen","en":"meetings"},
+    {"lesson":"Lesson 10","nl":"voorstel","en":"proposal"},
+    {"lesson":"Lesson 10","nl":"waar","en":"true"},
+    {"lesson":"Lesson 10","nl":"niet waar","en":"not true"},
+    {"lesson":"Lesson 10","nl":"gebouwd","en":"built"},
+    {"lesson":"Lesson 10","nl":"gementeeraad","en":"gemente board"},
+    {"lesson":"Lesson 10","nl":"de burgemeester","en":"the mayor"},
+    {"lesson":"Lesson 10","nl":"deelgementeen","en":"shared municiplaity"},
+    {"lesson":"Lesson 10","nl":"wetten","en":"laws"},
+    {"lesson":"Lesson 10","nl":"veiligheid","en":"safety"},
+    {"lesson":"Lesson 10","nl":"Het waterschap","en":"water authority"},
+    {"lesson":"Lesson 10","nl":"de ideeen","en":"the ideas"},
+    {"lesson":"Lesson 10","nl":"tweedekamer","en":"second chamber /room"},
+    {"lesson":"Lesson 10","nl":"strenge regels","en":"strictrules"},
+    {"lesson":"Lesson 10","nl":"linkse en rechtse","en":"left and right"},
+    {"lesson":"Lesson 10","nl":"de reclame","en":"the advertisement"},
+    {"lesson":"Lesson 10","nl":"lijstrekker","en":"party leader"},
+    {"lesson":"Lesson 10","nl":"stembiljet","en":"ballot paper"},
+    {"lesson":"Lesson 10","nl":"De uitslag","en":"the result"},
+    {"lesson":"Lesson 10","nl":"Verkiezingen","en":"elections"},
+    {"lesson":"Lesson 10","nl":"godsdienst","en":"religion"},
+    {"lesson":"Lesson 10","nl":"strijd","en":"fight"},
+    {"lesson":"Lesson 10","nl":"hoofddoek","en":"head scarf"},
+    {"lesson":"Lesson 10","nl":"de rechter","en":"the judge"},
+    {"lesson":"Lesson 10","nl":"staking","en":"strike"}
+  ];
 
-  // ---- Populate lesson dropdown ----
-  const lessonSel = document.getElementById('lesson');
-  LESSONS.forEach(l=>{ const o=document.createElement('option'); o.value=l; o.textContent=l; lessonSel.appendChild(o); });
-
-  const modeRadios=[...document.querySelectorAll('input[name=mode]')];
+  // ---- Elements & helpers ----
+  const status=document.getElementById('status');
+  const startBtn=document.getElementById('startBtn');
   const dirRadios=[...document.querySelectorAll('input[name=dir]')];
   const lenientChk=document.getElementById('lenient');
-  const dailyChk=document.getElementById('daily');
-  const sessInput=document.getElementById('session');
-  const newPerInput=document.getElementById('newPerDay');
-  const statsEl=document.getElementById('stats');
-  const resetBtn=document.getElementById('resetBtn');
-  const startBtn=document.getElementById('startBtn');
+  const lessonSel=document.getElementById('lesson');
 
-  function getMode(){return modeRadios.find(r=>r.checked).value}
-  function getDir(){return dirRadios.find(r=>r.checked).value}
-  function todayISO(){ const d=new Date(); d.setHours(0,0,0,0); return d.toISOString(); }
-  function addDays(date,days){ const d=new Date(date); d.setDate(d.getDate()+days); d.setHours(0,0,0,0); return d.toISOString(); }
-
-  // ---- SRS store ----
-  const STORE_KEY='knm_srs_v1';
-  function keyOf(item){ return (item.lesson+'|'+item.nl+'|'+item.en).toLowerCase(); }
-  function loadStore(){ try{ return JSON.parse(localStorage.getItem(STORE_KEY)||'{}'); }catch{ return {}; } }
-  function saveStore(s){ localStorage.setItem(STORE_KEY, JSON.stringify(s)); }
-  function resetStore(){ localStorage.removeItem(STORE_KEY); }
-
-  // Simple SRS: interval doubles on correct, resets to 1 on wrong; tracks reps/lapses
-  function scheduleNext(state, correct){
-    const now = todayISO();
-    state.reps = (state.reps||0) + 1;
-    if(correct){
-      state.interval = state.interval? Math.min(state.interval*2, 60) : 1; // cap 60 days
-    } else {
-      state.lapses = (state.lapses||0)+1;
-      state.interval = 1;
-      state.wrong = (state.wrong||0)+1;
-    }
-    state.last = now;
-    state.next = addDays(now, state.interval);
-    return state;
-  }
-
-  // Build list by lesson selection
-  function gatherItems(lesson){
-    let items=[];
-    if(lesson==='__ALL__'){ LESSONS.forEach(l=>{ (DATA[l]||[]).forEach(r=>items.push({lesson:l, nl:r.nl, en:r.en})) }); }
-    else { (DATA[lesson]||[]).forEach(r=>items.push({lesson:lesson, nl:r.nl, en:r.en})); }
-    return items;
-  }
-
-  function normalize(s){ return (s||'').toLowerCase().replace(/[()\[\]{}]/g,'').replace(/\s+/g,' ').trim(); }
-  function stripArticles(s){ return s.replace(/^(de|het|the|a|an)\s+/i,'').trim(); }
-  function normalizeForCompare(s){ let t=normalize(s); if(lenientChk.checked) t=stripArticles(t); return t; }
-  function splitVariants(s){ let t=(s||'').replace(/
-/g,' ').replace(/\s{2,}/g,' ').replace(/\((.*?)\)/g,'').trim(); const p=t.split(/\s*[,;\/\|]\s*/).map(x=>x.trim()).filter(Boolean); return p.length?p:[t]; }
-
-  function buildQueue(lesson, dir){
-    const items = gatherItems(lesson);
-    // SRS-aware selection if daily is on (only for Fill-in mode, but queue building is same)
-    const daily = dailyChk.checked;
-    const s = loadStore();
-    const now = todayISO();
-
-    if(!daily){
-      // Pure random
-      const q=[]; items.forEach(r=>{
-        const nlV=splitVariants(r.nl), enV=splitVariants(r.en);
-        const nlA=new Set(), enA=new Set();
-        nlV.forEach(v=>{ nlA.add(v); nlA.add(stripArticles(v)); });
-        enV.forEach(v=>{ enA.add(v); enA.add(stripArticles(v)); });
-        if(dir==='nl-en') q.push({prompt:nlV[0], answers:[...enA], lesson:r.lesson, raw:r});
-        else q.push({prompt:enV[0], answers:[...nlA], lesson:r.lesson, raw:r});
-      });
-      for(let i=q.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [q[i],q[j]]=[q[j],q[i]]; }
-      return q.slice(0, Math.max(5, Math.min(parseInt(sessInput.value||'25'), 200)));
-    }
-
-    // Daily practice: due first, then new, then random rest up to session size
-    const due=[]; const unseen=[]; const rest=[];
-    items.forEach(r=>{
-      const k=keyOf(r); const st=s[k];
-      if(!st){ unseen.push(r); }
-      else if(!st.next || st.next <= now){ due.push(r); }
-      else { rest.push(r); }
-    });
-
-    const sessionSize = Math.max(5, Math.min(parseInt(sessInput.value||'25'), 200));
-    const newLimit = Math.max(0, Math.min(parseInt(newPerInput.value||'25'), 500));
-
-    function toQ(arr){
-      const out=[]; arr.forEach(r=>{
-        const nlV=splitVariants(r.nl), enV=splitVariants(r.en);
-        const nlA=new Set(), enA=new Set();
-        nlV.forEach(v=>{ nlA.add(v); nlA.add(stripArticles(v)); });
-        enV.forEach(v=>{ enA.add(v); enA.add(stripArticles(v)); });
-        if(dir==='nl-en') out.push({prompt:nlV[0], answers:[...enA], lesson:r.lesson, raw:r});
-        else out.push({prompt:enV[0], answers:[...nlA], lesson:r.lesson, raw:r});
-      });
-      return out;
-    }
-
-    // Shuffle helpers
-    function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } }
-
-    shuffle(due); shuffle(unseen); shuffle(rest);
-
-    const q=[];
-    // 1) Due items first
-    q.push(...toQ(due));
-    // 2) New items (cap by newLimit)
-    q.push(...toQ(unseen.slice(0,newLimit)));
-    // 3) Fill up with the rest if still short
-    if(q.length < sessionSize) q.push(...toQ(rest));
-
-    return q.slice(0, sessionSize);
-  }
-
-  function refreshStats(){
-    const lesson = lessonSel.value;
-    const items = gatherItems(lesson);
-    const s = loadStore();
-    const now = todayISO();
-    let due=0, seen=0;
-    items.forEach(r=>{ const st=s[keyOf(r)]; if(st){ seen++; if(!st.next || st.next<=now) due++; } });
-    const newLimit = Math.max(0, Math.min(parseInt(newPerInput.value||'25'), 500));
-    const unseen = items.length - seen;
-    statsEl.textContent = `Due today: ${due} • Seen: ${seen} • New left: ${Math.max(0, newLimit - 0)}`;
-  }
-
-  lessonSel.addEventListener('change', refreshStats);
-  newPerInput.addEventListener('change', refreshStats);
-  dailyChk.addEventListener('change', ()=>{
-    document.getElementById('dailyOpts').style.opacity = dailyChk.checked? '1':'0.6';
-    refreshStats();
-  });
-
-  resetBtn.addEventListener('click', ()=>{
-    if(confirm('Reset all progress (SRS data)?')){ resetStore(); refreshStats(); alert('Progress reset.'); }
-  });
-
-  // Initialize stats
-  refreshStats();
-
-  // ---- Quiz wiring ----
-  const quiz = document.getElementById('quiz');
-  const modePill=document.getElementById('modePill');
-  const dirPill=document.getElementById('dirPill');
+  const quiz=document.getElementById('quiz');
   const lessonPill=document.getElementById('lessonPill');
+  const dirPill=document.getElementById('dirPill');
   const scoreEl=document.getElementById('score');
   const progressEl=document.getElementById('progress');
   const barFill=document.getElementById('barFill');
 
-  const fillin=document.getElementById('fillin');
   const promptEl=document.getElementById('prompt');
   const answerEl=document.getElementById('answer');
   const checkBtn=document.getElementById('checkBtn');
   const feedback=document.getElementById('feedback');
   const meta=document.getElementById('meta');
 
-  const matching=document.getElementById('matching');
-  const matchPairs=document.getElementById('matchPairs');
-  const checkMatchBtn=document.getElementById('checkMatchBtn');
-  const matchFeedback=document.getElementById('matchFeedback');
-
   let queue=[], idx=0, score=0, autoTimer=null;
 
+  function getDir(){ return dirRadios.find(r=>r.checked).value; }
+  function normalize(s){ return (s||'').toLowerCase().replace(/[()\[\]{}]/g,'').replace(/\s+/g,' ').trim(); }
+  function stripArticles(s){ return s.replace(/^(de|het|the|a|an)\s+/i,'').trim(); }
+  function normalizeForCompare(s){ let t=normalize(s); if(lenientChk.checked) t=stripArticles(t); return t; }
+  function splitVariants(s){ let t=(s||'').replace(/\n/g,' ').replace(/\s{2,}/g,' ').replace(/\((.*?)\)/g,'').trim(); const p=t.split(/\s*[,;\/\|]\s*/).map(x=>x.trim()).filter(Boolean); return p.length?p:[t]; }
+  function isCorrect(user, answers){ const u=normalizeForCompare(user); return answers.some(a=>normalizeForCompare(a)===u); }
+  function sampleRows(){ const choice=lessonSel.value; return (choice==='__ALL__')? ROWS.slice() : ROWS.filter(r=>r.lesson===choice); }
+
+  function buildQueue(dir){
+    const items = sampleRows();
+    const q=[]; items.forEach(r=>{
+      const nlV=splitVariants(r.nl), enV=splitVariants(r.en);
+      const nlA=new Set(), enA=new Set();
+      nlV.forEach(v=>{ nlA.add(v); nlA.add(stripArticles(v)); });
+      enV.forEach(v=>{ enA.add(v); enA.add(stripArticles(v)); });
+      if(dir==='nl-en') q.push({prompt:nlV[0], answers:[...enA], lesson:r.lesson});
+      else q.push({prompt:enV[0], answers:[...nlA], lesson:r.lesson});
+    });
+    for(let i=q.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [q[i],q[j]]=[q[j],q[i]]; }
+    return q;
+  }
+
   function updateProgress(){
-    progressEl.textContent=(idx+1)+'/'+queue.length;
-    const pct=Math.round((idx/Math.max(1,queue.length))*100); barFill.style.width=pct+'%';
+    progressEl.textContent=`${idx+1}/${queue.length}`;
+    barFill.style.width=(Math.round(idx/Math.max(1,queue.length)*100))+'%';
     scoreEl.textContent=score;
   }
 
-  function isCorrect(user, answers){ const u=normalizeForCompare(user); return answers.some(a=>normalizeForCompare(a)===u); }
-
-  function loadFill(){
-    feedback.textContent=''; answerEl.disabled=false; checkBtn.disabled=false;
-    if(idx>=queue.length){ promptEl.textContent='Finished!'; feedback.innerHTML='<b>Score:</b> '+score+' / '+queue.length; answerEl.disabled=true; checkBtn.disabled=true; barFill.style.width='100%'; meta.textContent=''; return; }
-    const q=queue[idx]; promptEl.textContent=q.prompt; answerEl.value=''; answerEl.focus(); meta.textContent='Source: '+(q.lesson||''); updateProgress();
+  function scheduleNext(delayMs=0){
+    clearTimeout(autoTimer);
+    autoTimer=setTimeout(()=>{ idx++; load(); }, delayMs);
   }
 
-  function nextFill(){ idx++; loadFill(); }
-
-  function loadMatch(){
-    matchFeedback.textContent='';
-    const size=6; // fixed small round
-    const subset=[]; const used=new Set();
-    while(subset.length < Math.min(size, queue.length)){ const i=Math.floor(Math.random()*queue.length); if(!used.has(i)){ used.add(i); subset.push(queue[i]); } }
-    const right=subset.map((q,i)=>({id:i,text:q.answers[0]})); for(let i=right.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [right[i],right[j]]=[right[j],right[i]]; }
-    matchPairs.innerHTML='';
-    subset.forEach((q,i)=>{ const div=document.createElement('div'); div.className='pair'; const lab=document.createElement('label'); lab.textContent=q.prompt; const sel=document.createElement('select'); sel.dataset.correct=String(i); const blank=document.createElement('option'); blank.value=''; blank.textContent='— select —'; sel.appendChild(blank); right.forEach(opt=>{ const o=document.createElement('option'); o.value=String(opt.id); o.textContent=opt.text; sel.appendChild(o); }); div.appendChild(lab); div.appendChild(sel); matchPairs.appendChild(div); });
-    matchPairs.dataset.round=JSON.stringify(subset);
+  function load(){
+    feedback.textContent=''; meta.textContent='';
+    answerEl.disabled=false; checkBtn.disabled=false;
+    if(idx>=queue.length){
+      promptEl.textContent='Finished! 🎉';
+      feedback.innerHTML = `<b>Score:</b> ${score} / ${queue.length}`;
+      answerEl.disabled=true; checkBtn.disabled=true; barFill.style.width='100%';
+      return;
+    }
+    const q=queue[idx];
+    promptEl.textContent=q.prompt;
+    answerEl.value='';
+    // iOS sometimes ignores immediate focus; defer a tick.
+    setTimeout(()=>{ try{ answerEl.focus(); }catch{} }, 0);
+    lessonPill.textContent = q.lesson;
     updateProgress();
   }
 
-  function nextMatch(){ const round=JSON.parse(matchPairs.dataset.round||'[]'); idx+=round.length; if(idx>=queue.length){ matchFeedback.innerHTML='<b>Finished!</b> Score: '+score+' / '+queue.length; checkMatchBtn.disabled=true; return; } loadMatch(); }
-
-  function updateSRSAfterAnswer(q, correct){
-    // Only in Fill-in mode apply SRS
-    if(getMode()!=='fill') return;
-    const s=loadStore(); const k=keyOf(q.raw); const st=s[k]||{interval:0,reps:0,lapses:0,wrong:0};
-    scheduleNext(st, correct);
-    s[k]=st; saveStore(s);
+  function start(){
+    idx=0; score=0; const dir=getDir();
+    dirPill.textContent=(dir==='nl-en'?'NL → EN':'EN → NL');
+    queue = buildQueue(dir);
+    if(!queue.length){ status.textContent='No items found for this selection.'; return; }
+    const l = lessonSel.value==='__ALL__'?'All (9 & 10)':lessonSel.value;
+    lessonPill.textContent = l;
+    quiz.style.display=''; load();
   }
 
-  function scheduleNextAuto(){ clearTimeout(autoTimer); autoTimer=setTimeout(()=>{ if(getMode()==='fill') nextFill(); else nextMatch(); }, 3000); }
+  // Add touch listeners so taps work inside WhatsApp’s viewer
+  startBtn.addEventListener('click', start, {passive:true});
+  startBtn.addEventListener('touchend', (e)=>{ e.preventDefault(); start(); }, {passive:false});
 
-  startBtn.addEventListener('click', ()=>{
-    idx=0; score=0;
-    const mode=getMode(); const dir=getDir(); const lesson=lessonSel.value;
-    queue = buildQueue(lesson, dir);
-    if(!queue.length){ alert('No items found for this selection.'); return; }
-    modePill.textContent=(mode==='fill'?'Fill‑in':'Match');
-    dirPill.textContent=(dir==='nl-en'?'NL → EN':'EN → NL');
-    lessonPill.textContent=(lesson==='__ALL__'?'All lessons':lesson);
-    quiz.style.display='';
-    fillin.style.display=(mode==='fill')?'':'none';
-    matching.style.display=(mode==='match')?'':'none';
-    if(mode==='fill') loadFill(); else loadMatch();
-  });
-
-  checkBtn.addEventListener('click', ()=>{
-    const q=queue[idx]; const ok=isCorrect(answerEl.value,q.answers); if(ok) score++;
-    feedback.innerHTML = ok? '<span class="ok">Correct!</span>' : '<span class="bad">Wrong.</span> Correct: <b>'+q.answers[0]+'</b>';
+  function onCheck(){
+    const q=queue[idx]; const ok=isCorrect(answerEl.value,q.answers);
+    if(ok) score++;
+    feedback.innerHTML = ok ? '<span class="ok">Correct!</span>'
+                            : '<span class="bad">Wrong.</span> Correct: <b>'+q.answers[0]+'</b>';
     answerEl.disabled=true; checkBtn.disabled=true;
-    updateSRSAfterAnswer(q, ok);
-    scheduleNextAuto();
-  });
-  answerEl.addEventListener('keydown', (e)=>{ if(e.key==='Enter') checkBtn.click(); });
+    if(ok){ idx++; load(); } else { scheduleNext(3000); }
+  }
 
-  checkMatchBtn.addEventListener('click', ()=>{
-    const selects=[...matchPairs.querySelectorAll('select')]; let rOK=0; selects.forEach(sel=>{ const ok=sel.value && sel.value===sel.dataset.correct; sel.classList.remove('correct','wrong'); sel.classList.add(ok?'correct':'wrong'); if(ok) rOK++; }); score+=rOK; matchFeedback.innerHTML = rOK+' / '+selects.length+' correct.'; scheduleNextAuto();
-  });
+  checkBtn.addEventListener('click', onCheck, {passive:true});
+  checkBtn.addEventListener('touchend', (e)=>{ e.preventDefault(); onCheck(); }, {passive:false});
+  answerEl.addEventListener('keydown',(e)=>{ if(e.key==='Enter') onCheck(); });
+
+  status.textContent=`Loaded Lessons 9 & 10 – ${ROWS.length} items.`;
 })();
 </script>
-</body></html>
+</body>
+</html>
